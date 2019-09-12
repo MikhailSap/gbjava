@@ -37,7 +37,7 @@ public class Client {
                 if (content.equals("quit")) {
                     try {
                         send.writeUTF(content);
-                        System.out.println("send is closed..");
+                        System.out.println("send is closing..");
                         break;
                     } catch (IOException e) {
                         e.printStackTrace();
