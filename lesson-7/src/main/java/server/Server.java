@@ -110,6 +110,7 @@ public class Server {
         }
 
         private boolean authentication() throws IOException{
+            sendForAuth(out, "Enter your login and pass with space" + "\n");
             String authData;
             while (true) {
                 authData = in.readUTF();
