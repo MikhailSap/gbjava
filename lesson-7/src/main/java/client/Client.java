@@ -17,6 +17,7 @@ public class Client {
     JTextArea incoming;
     private Thread threadForRead;
     private boolean isConnect;
+    private boolean isAuth = true;
 
 
     public Client() {
@@ -41,9 +42,16 @@ public class Client {
                 strFromServer = in.readUTF();
                 if (strFromServer.equals("/authok")) {
                     isConnect = true;
+                    isAuth = false;
+                    break;
+                } else if (strFromServer.equals("/timeout")) {
+                    incoming.append("you have been kicked from server by timeout" + "\n");
+                    out.writeUTF(strFromServer);
+                    isAuth = false;
                     break;
                 }
-                incoming.append(strFromServer);
+                else
+                    incoming.append(strFromServer + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,6 +83,7 @@ public class Client {
             public void mouseReleased(MouseEvent event) {
                 super.mouseReleased(event);
                 try {
+                    if (isConnect || isAuth)
                     out.writeUTF(outgoing.getText());
                     outgoing.setText("");
                 } catch (IOException e) {
@@ -82,8 +91,6 @@ public class Client {
                 }
             }
         });
-        MouseListener mouseListener = sendButton.getMouseListeners()[0];
-        sendButton.removeMouseListener(mouseListener);
         mainPanel.add(scrollPane);
         mainPanel.add(outgoing);
         mainPanel.add(sendButton);
@@ -93,6 +100,10 @@ public class Client {
             String message;
             while (true)
             try {
+                if (!isConnect) {
+                    closeConnection();
+                    break;
+                }
                 message = in.readUTF();
                 if (message.equals("quit")) {
                     closeConnection();
@@ -115,8 +126,9 @@ public class Client {
                     out.writeUTF("/end");
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    closeConnection();
                 }
-                closeConnection();
                 System.exit(0);
             }
         });

@@ -29,10 +29,6 @@ public class Member {
         return nick;
     }
 
-    public DataInputStream getIn() {
-        return in;
-    }
-
     public void setIn(DataInputStream in) {
         this.in = in;
     }

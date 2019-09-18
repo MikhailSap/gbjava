@@ -5,17 +5,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server {
     private final int PORT = 5000;
     BaseAuthService authService = new BaseAuthService();
-    private List<Member> online;
+    private ConcurrentLinkedQueue<Member> online;
 
 
     public void go() {
-        online = new ArrayList<>();
+        online = new ConcurrentLinkedQueue<>();
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             while (true) {
                 Socket connection = serverSocket.accept();
@@ -49,7 +48,8 @@ public class Server {
         for (Member member : online) {
             if (member.getNick().equals(nick))
                 try {
-                    member.getOut().writeUTF("Private from " + from.getNick() + ": " + message);
+                    member.getOut().writeUTF("private from " + from.getNick() + ":" + message);
+                    from.getOut().writeUTF("private to " + nick + ":" + message);
                     return;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -84,6 +84,7 @@ public class Server {
         DataInputStream in;
         DataOutputStream out;
         Member member;
+        boolean authOk;
 
 
         public ClientHandler(Socket socket) {
@@ -96,29 +97,42 @@ public class Server {
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
                 if (!authentication()) {
-                    closeConnection();
                     return;
                 }
                 readMessages();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                member.setOnline(false);
-                removeFromOnline(member);
+                if (member != null) {
+                    member.setOnline(false);
+                    removeFromOnline(member);
+                }
                 closeConnection();
             }
         }
 
         private boolean authentication() throws IOException{
-            sendForAuth(out, "Enter your login and pass with space" + "\n");
+            new Thread(() -> {
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!authOk)
+                sendForAuth(out, "/timeout");
+            }).start();
+            sendForAuth(out, "enter your login and pass with space");
             String authData;
             while (true) {
                 authData = in.readUTF();
+                if (authData.equals("/timeout")) {
+                    break;
+                }
                 String[] parts = authData.split("\\s");
                 member = authService.checkAuthData(parts[0], parts[1]);
                 if (member != null) {
                     if (member.isOnline()) {
-                        sendForAuth(out, "is busy" + "\n");
+                        sendForAuth(out, "is busy");
                         continue;
                     }
                     member.setIn(in);
@@ -127,28 +141,33 @@ public class Server {
                     addToOnline(member);
                     sendForAuth(out, "/authok");
                     sendPublicMessage("is connected", member);
+                    authOk = true;
                     return true;
                 } else {
                     sendForAuth(out, "login or password incorrect");
                 }
             }
+            return false;
         }
 
         private void readMessages() throws IOException{
             while (true) {
-                    String message = in.readUTF();
-                    if (message.equals("/end")) {
+                    String content = in.readUTF();
+                    if (content.equals("/end")) {
                         sendPublicMessage("is disconnected", member);
                         sendRequestForDisconnect(member);
                         member.setOnline(false);
                        break;
                     }
-                    if (message.startsWith("/w")) {
-                        String[] parts = message.split("\\s");
-                        sendPrivateMessage(parts[1], parts[2], member);
+                    if (content.startsWith("/w")) {
+                        String[] parts = content.split("\\s");
+                        String nick = parts[1];
+                        int prefix = "/w ".length() + nick.length();
+                        String message = content.substring(prefix);
+                        sendPrivateMessage(nick, message, member);
                     }
                     else
-                        sendPublicMessage(message, member);
+                        sendPublicMessage(content, member);
             }
         }
 

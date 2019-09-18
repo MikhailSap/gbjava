@@ -1,10 +1,9 @@
 package server;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChatMembers {
-    List<Member> members = new ArrayList<>();
+    ConcurrentLinkedQueue<Member> members = new ConcurrentLinkedQueue<>();
 
     public ChatMembers() {
         members.add(new Member("login1", "pass1", "nick1"));
@@ -12,15 +11,7 @@ public class ChatMembers {
         members.add(new Member("login3", "pass3", "nick3"));
     }
 
-    public List<Member> getMembers() {
+    public ConcurrentLinkedQueue<Member> getMembers() {
         return members;
-    }
-
-    public Member getMemberByNick(String nick) {
-        for (Member member : members) {
-            if (member.getNick().equals(nick))
-                return member;
-        }
-        return null;
     }
 }

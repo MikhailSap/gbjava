@@ -1,9 +1,9 @@
 package server;
 
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BaseAuthService implements AuthService{
-    private List<Member> members = new ChatMembers().getMembers();
+    private ConcurrentLinkedQueue<Member> members = new ChatMembers().getMembers();
 
     @Override
     public Member checkAuthData(String login, String pass) {
