@@ -114,7 +114,7 @@ public class Server {
         private boolean authentication() throws IOException{
             new Thread(() -> {
                 try {
-                    Thread.sleep(20000);
+                    Thread.sleep(120000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
