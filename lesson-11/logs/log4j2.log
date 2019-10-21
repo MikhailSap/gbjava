@@ -1,0 +1,40 @@
+2019-10-21 09:55:08,819 INFO s.Server [main] Server Started.
+2019-10-21 10:00:18,903 INFO o.h.Version [Thread-0] HHH000412: Hibernate Core {5.4.5.Final}
+2019-10-21 10:00:20,114 INFO o.h.a.c.Version [Thread-0] HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2019-10-21 10:00:20,415 WARN o.h.o.c.pooling [Thread-0] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2019-10-21 10:00:20,432 INFO o.h.o.c.pooling [Thread-0] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/gbchat]
+2019-10-21 10:00:20,433 INFO o.h.o.c.pooling [Thread-0] HHH10001001: Connection properties: {password=****, user=mikhail}
+2019-10-21 10:00:20,434 INFO o.h.o.c.pooling [Thread-0] HHH10001003: Autocommit mode: false
+2019-10-21 10:00:20,438 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl [Thread-0] HHH000115: Hibernate connection pool size: 20 (min=1)
+2019-10-21 10:00:20,694 INFO o.h.d.Dialect [Thread-0] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL9Dialect
+2019-10-21 10:00:22,318 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [Thread-0] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2019-10-21 13:47:10,852 INFO s.Server [main] Server Started.
+2019-10-21 13:47:23,056 INFO o.h.Version [Thread-0] HHH000412: Hibernate Core {5.4.5.Final}
+2019-10-21 13:47:23,682 INFO o.h.a.c.Version [Thread-0] HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2019-10-21 13:47:23,821 WARN o.h.o.c.pooling [Thread-0] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2019-10-21 13:47:23,827 INFO o.h.o.c.pooling [Thread-0] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/gbchat]
+2019-10-21 13:47:23,828 INFO o.h.o.c.pooling [Thread-0] HHH10001001: Connection properties: {password=****, user=mikhail}
+2019-10-21 13:47:23,828 INFO o.h.o.c.pooling [Thread-0] HHH10001003: Autocommit mode: false
+2019-10-21 13:47:23,831 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl [Thread-0] HHH000115: Hibernate connection pool size: 20 (min=1)
+2019-10-21 13:47:23,924 INFO o.h.d.Dialect [Thread-0] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL9Dialect
+2019-10-21 13:47:24,851 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [Thread-0] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2019-10-21 13:48:00,214 INFO s.Server [Thread-0] Slon change nick to Slon
+2019-10-21 14:09:05,568 INFO s.Server [main] Server Started.
+2019-10-21 14:09:06,249 INFO s.Server [main] New connection.
+2019-10-21 14:09:21,412 INFO o.h.Version [Thread-0] HHH000412: Hibernate Core {5.4.5.Final}
+2019-10-21 14:09:22,040 INFO o.h.a.c.Version [Thread-0] HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2019-10-21 14:09:22,161 WARN o.h.o.c.pooling [Thread-0] HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2019-10-21 14:09:22,168 INFO o.h.o.c.pooling [Thread-0] HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/gbchat]
+2019-10-21 14:09:22,168 INFO o.h.o.c.pooling [Thread-0] HHH10001001: Connection properties: {password=****, user=mikhail}
+2019-10-21 14:09:22,169 INFO o.h.o.c.pooling [Thread-0] HHH10001003: Autocommit mode: false
+2019-10-21 14:09:22,171 INFO o.h.e.j.c.i.DriverManagerConnectionProviderImpl [Thread-0] HHH000115: Hibernate connection pool size: 20 (min=1)
+2019-10-21 14:09:22,248 INFO o.h.d.Dialect [Thread-0] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL9Dialect
+2019-10-21 14:09:23,129 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [Thread-0] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2019-10-21 14:09:23,252 INFO s.Server [Thread-0] Slon is connected.
+2019-10-21 14:09:33,753 INFO s.Server [Thread-0] Slonis disconnected.
+2019-10-21 14:09:33,760 INFO s.Server [Thread-0] Connection is closed.
+2019-10-21 14:09:46,023 INFO s.Server [main] New connection.
+2019-10-21 14:10:13,548 INFO s.Server [main] Server Started.
+2019-10-21 14:10:18,591 INFO s.Server [main] New connection.
+2019-10-21 14:10:38,601 WARN s.Server [Thread-1] Timeout from user.
+2019-10-21 14:10:38,606 INFO s.Server [Thread-0] Connection is closed.
