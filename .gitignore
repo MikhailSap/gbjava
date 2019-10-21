@@ -10,10 +10,8 @@
 
 .DS_Store
 
-**.xml
 
 # Maven
 
-**/log/
 
 **/target/

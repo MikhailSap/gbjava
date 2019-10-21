@@ -13,8 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.Queue;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class Client {
     private final String SERVER_IP = "localhost";
@@ -222,6 +222,19 @@ public class Client {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void inHistory() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("History.mgs"))) {
+            java.util.List<String> list = reader.lines().collect(Collectors.toList());
+            int coutnLines = list.size();
+            for (int i = coutnLines;  i < list.size(); i++) {
+                incoming.append(list.get(i));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

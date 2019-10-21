@@ -1,5 +1,7 @@
 package server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import server.dao.MemberDao;
 
 import java.io.DataInputStream;
@@ -13,13 +15,16 @@ public class Server {
     private final int PORT = 5000;
     BaseAuthService authService = new BaseAuthService();
     private ConcurrentLinkedQueue<Member> online;
+    private static final Logger LOGGER = LogManager.getLogger();
 
 
     public void go() {
         online = new ConcurrentLinkedQueue<>();
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            LOGGER.info("Server Started.");
             while (true) {
                 Socket connection = serverSocket.accept();
+                LOGGER.info("New connection.");
                 new ClientHandler(connection).start();
             }
         } catch (Exception e) {
@@ -31,7 +36,7 @@ public class Server {
         try {
             out.writeUTF(answer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 
@@ -40,7 +45,7 @@ public class Server {
             try {
                 member.getOut().writeUTF(from.getNick() + ": " + message);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         }
 
@@ -54,13 +59,13 @@ public class Server {
                     from.getOut().writeUTF("private to " + nick + ":" + message);
                     return;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e);
                 }
         }
         try {
             from.getOut().writeUTF(nick + " is not online");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
 
     }
@@ -69,11 +74,12 @@ public class Server {
         try {
             member.getOut().writeUTF("quit");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 
     private synchronized void changeNick(String newNick, Member member) {
+        LOGGER.info(member.getNick() + " change nick to " + newNick);
         member.setNick(newNick);
         MemberDao.getMemberDao().update(member);
     }
@@ -125,8 +131,10 @@ public class Server {
                 } catch (InterruptedException e) {
                     return;
                 }
-                if (!authOk)
-                sendForAuth(out, "/timeout");
+                if (!authOk) {
+                    sendForAuth(out, "/timeout");
+                    LOGGER.warn("Timeout from user.");
+                }
             });
             authTime.start();
             sendForAuth(out, "enter your login and pass with space");
@@ -140,6 +148,7 @@ public class Server {
                     member.setOut(out);
                     sendRequestForDisconnect(member);
                     authTime.interrupt();
+                    LOGGER.warn("Disconnect from user.");
                     break;
                 }
                 String[] parts = authData.split("\\s");
@@ -147,6 +156,7 @@ public class Server {
                 if (member != null) {
                     if (member.isOnline()) {
                         sendForAuth(out, "is busy");
+                        LOGGER.error("User is busy.");
                         continue;
                     }
                     member.setIn(in);
@@ -155,10 +165,12 @@ public class Server {
                     addToOnline(member);
                     sendForAuth(out, member.getNick() + " /authok");
                     sendPublicMessage("is connected", member);
+                    LOGGER.info(member.getNick() + " is connected.");
                     authOk = true;
                     return true;
                 } else {
                     sendForAuth(out, "login or password incorrect");
+                    LOGGER.error("Login or password incorrect, has been provided: login - " + parts[0] + " password - " + parts[1]);
                 }
             }
             return false;
@@ -171,6 +183,7 @@ public class Server {
                         sendPublicMessage("is disconnected", member);
                         sendRequestForDisconnect(member);
                         member.setOnline(false);
+                        LOGGER.info(member.getNick() + " is disconnected.");
                        break;
                     }
                     if (content.startsWith("/rn")) {
@@ -196,8 +209,9 @@ public class Server {
                 in.close();
                 out.close();
                 socket.close();
+                LOGGER.info("Connection is closed.");
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e);
             }
         }
     }
