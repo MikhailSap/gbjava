@@ -1,48 +1,42 @@
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class RunTest {
 
     public void start(Class testClass) throws Exception{
+        TestClass tc = new TestClass();
 
-        List<Annotation> annotationBefore = new ArrayList<Annotation>();
-        List<Annotation> annotationAfter = new ArrayList<Annotation>();
-        List<Annotation> annotationTest = new ArrayList<Annotation>();
+        List<Method> annotationBefore = new ArrayList<>();
+        List<Method> annotationAfter = new ArrayList<>();
+        Map<Integer, Method> tests = new TreeMap<>();
         Method[] declaredMethods = testClass.getDeclaredMethods();
+
         for (Method method : declaredMethods) {
             Annotation annotation = method.getDeclaredAnnotations()[0];
             if (annotation.annotationType().equals(BeforeSuite.class))
-                annotationBefore.add(annotation);
+                annotationBefore.add(method);
 
             if (annotation.annotationType().equals(AfterSuite.class))
-                annotationAfter.add(annotation);
+                annotationAfter.add(method);
 
             if (annotation.annotationType().equals(Test.class))
-                annotationTest.add(annotation);
+                tests.put(((Test)annotation).priority(), method);
         }
 
         if (annotationBefore.size() > 1 || annotationAfter.size() >1)
             throw new RuntimeException();
 
+        annotationBefore.get(0).invoke(tc);
 
+        tests.forEach((priority, method) -> {
+            try {
+                method.invoke(tc);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
-        for (Method method : declaredMethods) {
-            Annotation annotation = method.getDeclaredAnnotations()[0];
-            if (annotation.annotationType().equals(BeforeSuite.class))
-                method.invoke(new TestClass());
-        }
-
-
-        List<Integer> priorityes = annotationTest.stream()
-                .map(annotation -> ((Test)annotation).priority())
-                .sorted()
-                .collect(Collectors.toList());
-
-
-
-
+        annotationAfter.get(0).invoke(tc);
     }
 }

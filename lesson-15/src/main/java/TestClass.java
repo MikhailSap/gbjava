@@ -1,5 +1,4 @@
 public class TestClass {
-
     @BeforeSuite
     public void before() {
         System.out.println("before");
@@ -13,13 +12,13 @@ public class TestClass {
     }
 
 
-    @Test
+    @Test(priority = 7)
     public void tesOne() {
         System.out.println("one");
 
     }
 
-    @Test(priority = 3)
+    @Test(priority = 1)
     public void testTwo() {
         System.out.println("two");
 
